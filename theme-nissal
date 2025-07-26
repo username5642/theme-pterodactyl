@@ -1,0 +1,24 @@
+RUN
+cd /var/www/pterodactyl
+php artisan down
+RUN
+curl -L https://github.com/Nookure/NookTheme/releases/latest/download/panel.tar.gz | tar -xzv
+RUN
+curl -L https://github.com/Nookure/NookTheme/releases/latest/download/panel.tar.gz | tar -xzv
+RUN
+chmod -R 755 storage/* bootstrap/cache
+RUN
+composer install --no-dev --optimize-autoloader -yes
+RUN
+php artisan view:clear
+php artisan config:clear
+RUN
+php artisan migrate --seed --force
+RUN
+chown -R www-data:www-data /var/www/pterodactyl/*
+RUN
+php artisan queue:restart
+RUN
+php artisan up
+
+echo Theme Install Sucessfully Maded By Nissalop2
