@@ -1,5 +1,8 @@
 # CLONE
 ``git clone https://github.com/username5642/theme-pterodactyl.git``
 
-# RUN IT
+# CD IT
+``cd theme-pterodactyl``
+
+# RUN THEME
 ``bash theme-nissal``
