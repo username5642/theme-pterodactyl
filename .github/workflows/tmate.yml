@@ -1,0 +1,45 @@
+name: VPS Session [WORK]
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [auto-restart]
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  vps:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360  # max 6 hours
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Restore Backup (if available)
+        run: bash backup-restore.sh restore
+
+      - name: Setup tmate (VPS with sshx)
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
+
+      - name: Keep VPS alive for ~6 hours
+        run: |
+          echo "Starting VPS session..."
+          sleep $((359*60))  # 5h 59m
+
+      - name: Run Backup before shutdown
+        run: |
+          echo "Running backup before shutdown..."
+          bash backup-restore.sh backup
+
+      - name: Trigger Auto Restart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          chmod +x auto-start.yml
+          ./auto-start.yml
