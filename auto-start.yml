@@ -1,0 +1,10 @@
+#!/bin/bash
+# auto-start.yml
+# Triggers the VPS workflow (tmate.yml) again
+
+echo "[*] Restarting VPS workflow..."
+curl -X POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/tmate.yml/dispatches \
+  -d '{"ref":"main"}'
